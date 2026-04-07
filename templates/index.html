@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite Analysis Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #334155;
+            --primary: #10b981; /* Emerald Green */
+            --primary-hover: #059669;
+            --accent: #3b82f6; /* Blue */
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #475569;
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* --- Header --- */
+        header {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+        }
+
+        .brand i {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* --- Layout --- */
+        main {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 1024px) {
+            main {
+                grid-template-columns: 400px 1fr;
+                align-items: start;
+            }
+        }
+
+        /* --- Cards & Containers --- */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+        }
+
+        /* --- Form Elements --- */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-input);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: white;
+            font-family: 'JetBrains Mono', monospace; /* Tech feel for numbers */
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        /* --- Tabs for Location --- */
+        .tabs {
+            display: flex;
+            background: var(--bg-dark);
+            padding: 4px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .tab-btn.active {
+            background: var(--bg-card);
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-main);
+            margin-top: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        /* --- GPS Status Box --- */
+        .gps-panel {
+            background: #020617;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: left;
+            margin-top: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gps-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 2px; height: 100%;
+            background: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            display: inline-block;
+        }
+
+        .status-indicator.active {
+            background-color: var(--primary);
+            box-shadow: 0 0 8px var(--primary);
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-data {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--primary);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- Results Section --- */
+        .results-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .image-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .image-header {
+            padding: 12px 20px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            min-height: 300px;
+            background: #000;
+        }
+
+        .aoi-info {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            padding: 10px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        /* --- Error Messages --- */
+        .error-banner {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
+            padding: 16px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* --- Placeholder for Empty State --- */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 60px 20px;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+            <i class="ph-fill ph-planet"></i>
+            <span>SatScope<span style="color:var(--primary)">.AI</span></span>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">
+            Analysis Dashboard v2.0
+        </div>
+    </header>
+
+    <main>
+        <!-- LEFT COLUMN: CONTROLS -->
+        <section class="controls">
+            <form method="POST" id="analysisForm">
+                
+                <!-- Credentials -->
+                <div class="card">
+                    <h3><i class="ph ph-key"></i> SentinelHub Credentials</h3>
+                    <div class="form-group">
+                        <label>Client ID</label>
+                        <input type="text" name="client_id" placeholder="Enter ID" value="{{ session.get('client_id', '') }}" required autocomplete="off"
+                    </div>
+                    <div class="form-group">
+                        <label>Client Secret</label>
+                        <input type="password" name="client_secret" placeholder="Enter Secret" value="{{ session.get('client_secret', '') }}" required autocomplete="off">
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="card">
+                    <h3><i class="ph ph-map-pin"></i> Location Target</h3>
+                    
+                    <!-- Custom Tabs -->
+                    <div class="tabs">
+                        <button type="button" class="tab-btn active" onclick="switchTab('place')">
+                            <i class="ph ph-buildings"></i> Place
+                        </button>
+                        <button type="button" class="tab-btn" onclick="switchTab('coords')">
+                            <i class="ph ph-crosshair"></i> Coords
+                        </button>
+                    </div>
+
+                    <!-- Tab 1: Place Name -->
+                    <div id="tab-place" class="tab-content active">
+                        <div class="form-group">
+                            <label>Search Location</label>
+                            <input type="text" name="place_name" placeholder="e.g. Madurai, Tokyo">
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Coordinates -->
+                    <div id="tab-coords" class="tab-content">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div class="form-group">
+                                <label>Latitude</label>
+                                <input type="text" id="lat" name="lat" placeholder="0.0000">
+                            </div>
+                            <div class="form-group">
+                                <label>Longitude</label>
+                                <input type="text" id="lon" name="lon" placeholder="0.0000">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="getBrowserLocation()">
+                            <i class="ph ph-navigation-arrow"></i> Use Current Device GPS
+                        </button>
+                    </div>
+
+                    <!-- Live GPS Panel (Always visible or toggleable? Let's make it a widget below) -->
+                    <div class="gps-panel">
+                        <div class="status-header">
+                            <span>📡 Live Link (UDP)</span>
+                            <span id="udp-light" class="status-indicator"></span>
+                        </div>
+                        <div id="udp-status" class="status-data">
+                            Waiting for stream...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configuration -->
+                <div class="card">
+                    <h3><i class="ph ph-calendar"></i> Mission Settings</h3>
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" name="start_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" name="end_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Resolution (meters)</label>
+                        <input type="number" name="resolution" value="10" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="ph-bold ph-rocket-launch"></i> Fetch Satellite Data
+                </button>
+
+            </form>
+        </section>
+
+        <!-- RIGHT COLUMN: VISUALIZATION -->
+        <section class="results">
+            
+            {% if error %}
+                <div class="error-banner">
+                    <i class="ph-bold ph-warning-circle" style="font-size: 1.5rem;"></i>
+                    <span>{{ error }}</span>
+                </div>
+            {% endif %}
+
+            {% if rgb_path or ndvi_path or analysis%}
+                <div class="results-container">
+                    
+                    {% if rgb_path %}
+                        <div class="image-card">
+                            <div class="image-header">
+                                <i class="ph-fill ph-image"></i> RGB True Color
+                            </div>
+                            <img src="/{{ rgb_path }}" alt="RGB Preview" class="image-preview">
+                        </div>
+                    {% endif %}
+
+                    {% if ndvi_path %}
+                        <div class="image-card">
+                            <div class="image-header">
+                                <i class="ph-fill ph-plant"></i> NDVI Vegetation Index
+                            </div>
+                            <img src="/{{ ndvi_path }}" alt="NDVI Preview" class="image-preview">
+                        </div>
+                    {% endif %}
+
+                    {% if aoi_size %}
+                        <div class="aoi-info">
+                            AOI Dimensions: {{ aoi_size[0] }}px x {{ aoi_size[1] }}px
+                        </div>
+                    {% endif %}
+                    {% if analysis %}
+                    <p style="color:red;">DEBUG ANALYSIS: {{ analysis }}</p>
+                    <div class="card">
+                        <h3><i class="ph ph-leaf"></i> Crop Intelligence</h3>
+
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:15px;">
+                            
+                            <div style="background:#020617; padding:15px; border-radius:10px;">
+                                <p style="color:var(--text-muted); font-size:0.8rem;">NDVI Average</p>
+                                <h2 style="color:var(--primary);">{{ analysis.avg_ndvi }}</h2>
+                            </div>
+
+                            <div style="background:#020617; padding:15px; border-radius:10px;">
+                                <p style="color:var(--text-muted); font-size:0.8rem;">Crop Health</p>
+                                <h3 style="color:#22c55e;">{{ analysis.health }}</h3>
+                            </div>
+
+                            <div style="background:#020617; padding:15px; border-radius:10px;">
+                                <p style="color:var(--text-muted); font-size:0.8rem;">Detected Crop</p>
+                                <h3 style="color:#facc15;">{{ analysis.crop }}</h3>
+                            </div>
+
+                            <div style="background:#020617; padding:15px; border-radius:10px;">
+                                <p style="color:var(--text-muted); font-size:0.8rem;">Water Status</p>
+                                <h3 style="color:#38bdf8;">{{ analysis.water }}</h3>
+                            </div>
+
+                            <div style="background:#020617; padding:15px; border-radius:10px;">
+                                <p style="color:var(--text-muted); font-size:0.8rem;">Irrigation Advice</p>
+                                <h3 style="color:#fb923c;">{{ analysis.irrigation }}</h3>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    
+                </div>
+            {% else %}
+                <!-- Empty State Placeholder -->
+                <div class="empty-state">
+                    <i class="ph-duotone ph-satellite"></i>
+                    <h3>No Data Loaded</h3>
+                    <p style="color: var(--text-muted); max-width: 300px; margin: 10px auto;">
+                        Configure your credentials and select a location to begin satellite analysis.
+                    </p>
+                </div>
+            {% endif %}
+
+        </section>
+    </main>
+
+    <script>
+    /* ===============================
+       📍 Tab Logic
+    ================================ */
+    function switchTab(tabName) {
+        // Update buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        // Update content
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.getElementById('tab-' + tabName).classList.add('active');
+    }
+
+    /* ===============================
+       📍 Browser GPS
+    ================================ */
+    function getBrowserLocation() {
+        const btn = event.currentTarget;
+        const originalText = btn.innerHTML;
+        
+        btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Locating...';
+        btn.style.opacity = "0.7";
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    document.getElementById("lat").value = position.coords.latitude.toFixed(6);
+                    document.getElementById("lon").value = position.coords.longitude.toFixed(6);
+                    btn.innerHTML = '<i class="ph-bold ph-check"></i> Location Found';
+                    btn.style.background = "var(--primary)";
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.style.background = "";
+                        btn.style.opacity = "1";
+                    }, 2000);
+                },
+                function(error) {
+                    btn.innerHTML = originalText;
+                    btn.style.opacity = "1";
+                    alert("Unable to retrieve location: " + error.message);
+                }
+            );
+        } else {
+            btn.innerHTML = originalText;
+            btn.style.opacity = "1";
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    /* ===============================
+       📡 Fake Live Indicator (UDP)
+    ================================ */
+    // Set default dates to today for convenience
+    const today = new Date().toISOString().split('T')[0];
+    document.querySelector('input[name="end_date"]').value = today;
+    
+    setInterval(() => {
+        fetch("/get-location", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({})  // ping backend
+        })
+        .then(res => res.json())
+        .then(data => {
+            const statusEl = document.getElementById("udp-status");
+            const lightEl = document.getElementById("udp-light");
+            
+            if (data.lat && data.lon) {
+                statusEl.innerHTML = `LAT: ${data.lat} <span style="color:#475569">|</span> LON: ${data.lon}`;
+                lightEl.classList.add('active');
+            } else {
+                statusEl.innerHTML = "🛰️ Scanning for signal...";
+                lightEl.classList.remove('active');
+            }
+        })
+        .catch(() => {
+            const statusEl = document.getElementById("udp-status");
+            const lightEl = document.getElementById("udp-light");
+            statusEl.innerHTML = "⚠️ Signal Lost / Server Offline";
+            lightEl.classList.remove('active');
+            lightEl.style.backgroundColor = "var(--danger)";
+        });
+
+    }, 3000);
+    </script>
+</body>
+</html>

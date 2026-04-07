@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite Monitoring System</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #020617, #0f172a, #020617);
+        }
+        .glass {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #22c55e, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body class="text-white font-sans">
+
+<!-- NAVBAR -->
+<nav class="flex justify-between items-center px-8 py-5">
+    <h1 class="text-xl font-bold">🛰️ Satellite System</h1>
+
+    <div class="space-x-4">
+        <a href="{{ url_for('login') }}" class="px-4 py-2 glass rounded hover:bg-white/10">Login</a>
+        <a href="{{ url_for('register') }}" class="px-4 py-2 bg-green-500 rounded hover:bg-green-600">Register</a>
+    </div>
+</nav>
+
+<!-- HERO SECTION -->
+<div class="flex flex-col items-center justify-center text-center mt-24 px-4">
+
+    <h1 class="text-5xl md:text-6xl font-extrabold mb-6">
+        <span class="gradient-text">Smart Crop</span><br>
+        Monitoring System
+    </h1>
+
+    <p class="text-gray-300 max-w-xl mb-10 text-lg">
+        Real-time NDVI analysis • Satellite imagery • AI-powered crop insights
+    </p>
+
+    <div class="flex gap-4 flex-wrap justify-center">
+        <a href="{{ url_for('register') }}"
+           class="px-6 py-3 bg-green-500 rounded-lg text-lg hover:bg-green-600 transition">
+           🚀 Get Started
+        </a>
+
+        <a href="{{ url_for('login') }}"
+           class="px-6 py-3 glass rounded-lg text-lg hover:bg-white/10 transition">
+           🔐 Login
+        </a>
+    </div>
+
+</div>
+
+<!-- FEATURES -->
+<div class="mt-24 px-6 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+
+    <div class="glass p-6 rounded-xl">
+        <h3 class="text-xl font-bold mb-2">🌱 NDVI Analysis</h3>
+        <p class="text-gray-300">Monitor vegetation health using satellite data.</p>
+    </div>
+
+    <div class="glass p-6 rounded-xl">
+        <h3 class="text-xl font-bold mb-2">🛰️ Satellite Data</h3>
+        <p class="text-gray-300">Fetch real-time Sentinel-2 imagery.</p>
+    </div>
+
+    <div class="glass p-6 rounded-xl">
+        <h3 class="text-xl font-bold mb-2">📊 Insights</h3>
+        <p class="text-gray-300">Get smart crop recommendations instantly.</p>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="text-center mt-20 py-6 text-gray-400">
+    © 2026 Smart Crop Monitoring | Built with Sentinel-2
+</footer>
+
+</body>
+</html>

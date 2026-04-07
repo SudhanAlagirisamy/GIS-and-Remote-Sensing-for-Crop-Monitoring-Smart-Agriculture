@@ -9,7 +9,8 @@ By utilizing Sentinel-2 satellite data, the system processes geospatial informat
 🛰️ Satellite Image Retrieval
 Fetch high-resolution Sentinel-2 imagery for any selected location.
 🌿 NDVI Calculation & Visualization
-Compute vegetation index and overlay it on real satellite images.
+Compute vegetation index (NDVI)
+Overlay results on real satellite images for easy understanding
 📍 Multiple Location Inputs
 Place name (Geocoding)
 Latitude & Longitude
@@ -19,9 +20,11 @@ Crop health detection 🌾
 Crop type estimation 🌱
 Irrigation recommendations 💧
 🔐 User Authentication
-Secure login & registration system using Flask and SQLite.
+Secure login & registration system
+Built using Flask and SQLite
 ⚡ Real-Time Processing
-Efficient backend handling with fast visualization output.
+Efficient backend handling
+Fast satellite data visualization
 🧠 Tech Stack
 Category	Technologies Used
 Backend	Flask (Python)
@@ -30,18 +33,18 @@ Database	SQLite
 Geospatial	Sentinel Hub API, Geopy
 Data Handling	NumPy, Matplotlib
 🖼️ How It Works
-User logs into the system 🔐
-Inputs location (place/GPS/coordinates) 📍
-System fetches satellite data 🛰️
-NDVI is calculated 🌿
-Overlay visualization is generated 🎨
-Insights are displayed 📊
+🔐 User logs into the system
+📍 Inputs location (place / GPS / coordinates)
+🛰️ System fetches satellite data
+🌿 NDVI is calculated
+🎨 Overlay visualization is generated
+📊 Insights are displayed
 🌍 Applications
-Precision Agriculture 🚜
-Crop Health Monitoring 🌱
-Irrigation Planning 💧
-Environmental Analysis 🌍
-Smart Farming Systems
+🚜 Precision Agriculture
+🌱 Crop Health Monitoring
+💧 Irrigation Planning
+🌍 Environmental Analysis
+🌾 Smart Farming Systems
 🔮 Future Enhancements
 🗺️ Interactive Map Integration
 📈 NDVI Time-Series Analysis
